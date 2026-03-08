@@ -1,6 +1,6 @@
 package com.commerce.demo.exception;
 
-import com.commerce.demo.dto.response.ApiResponse;
+import com.commerce.demo.dto.response.CommonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     // Handle validation errors (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationErrors(
+    public ResponseEntity<CommonResponse<Map<String, String>>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -26,32 +26,32 @@ public class GlobalExceptionHandler {
         });
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error("Validation failed"));
+                .body(CommonResponse.error("Validation failed"));
     }
 
     // Handle resource not found
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(
+    public ResponseEntity<CommonResponse<Void>> handleResourceNotFound(
             ResourceNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.error(ex.getMessage()));
+                .body(CommonResponse.error(ex.getMessage()));
     }
 
     // Handle illegal argument (email already registered, dll.)
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(
+    public ResponseEntity<CommonResponse<Void>> handleIllegalArgument(
             IllegalArgumentException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(ex.getMessage()));
+                .body(CommonResponse.error(ex.getMessage()));
     }
 
     // Handle generic error
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGenericError(Exception ex) {
+    public ResponseEntity<CommonResponse<Void>> handleGenericError(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("An unexpected error occurred"));
+                .body(CommonResponse.error("An unexpected error occurred"));
     }
 }
